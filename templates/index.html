@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../static/js/graphs.js"></script>
+    <title>Server Status</title>
+
+</head>
+<body>
+<header>
+    <nav
+            class="relative flex w-full items-center justify-between bg-green-950 py-2 text-green-600 shadow-lg md:flex-wrap md:justify-start"
+            data-te-navbar-ref>
+        <div class="flex w-full flex-wrap items-center justify-between px-3">
+            <div
+                    class="!visible hidden grow basis-[100%] items-center lg:!flex lg:basis-auto"
+                    id="navbarSupportedContentY"
+                    data-te-collapse-item>
+                <h1 class="text-2xl">status@{{ context['hostname'] }}<span class="text-blue-400">:~$</span></h1>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="min-w-screen min-h-screen bg-black">
+    <section class="py-1 bg-blueGray-50">
+        <div class="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-4">
+            <div class="relative flex flex-col min-w-0 break-words bg-black border-solid border-2 border-green-500 text-green-500 w-full mb-6 shadow-lg rounded ">
+                <div class="rounded-t mb-0 px-4 py-3 border-0">
+                    <div class="flex flex-wrap items-center">
+                        <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+                            <h3 class="font-semibold text-xl"><i class="lni lni-graph"></i> SYSTEM STATISTICS</h3>
+                        </div>
+                        <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-row">
+                    <div class="block w-full overflow-x-auto">
+                        <h1 class="text-center">System Usage</h1>
+                        <canvas height="100" id="memcpugraph"></canvas>
+                    </div>
+                    <div class="block w-full overflow-x-auto">
+                        <h1 class="text-center">CPU Frequency</h1>
+                        <canvas height="100" id="cpufreqgraph"></canvas>
+                    </div>
+                </div>
+
+                <table class="items-center bg-transparent w-full border-collapse ">
+                    <thead>
+                    <tr>
+                        <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            STATISTIC
+                        </th>
+                        <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            Value
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                            Uptime
+                        </td>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 " id="valUptime">
+                            {{ context['sysinfo']['uptime'] }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                            Load Averages
+                        </td>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 " id="valLoadAvg">
+                            {{ context['sysinfo']['load_avg'] }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                            Amt of Active Processes
+                        </td>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 " id="valNumPids">
+                            {{ context['sysinfo']['num_pids'] }}
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+        <div class="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-4">
+            <div class="relative flex flex-col min-w-0 break-words bg-black border-solid border-2 border-green-500 text-green-500 w-full mb-6 shadow-lg rounded ">
+                <div class="rounded-t mb-0 px-4 py-3 border-0">
+                    <div class="flex flex-wrap items-center">
+                        <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+                            <h3 class="font-semibold text-xl"><i class="lni lni-network"></i> NETWORK</h3>
+                        </div>
+                        <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block w-full overflow-x-auto">
+                    <table class="items-center bg-transparent w-full border-collapse ">
+                        <thead>
+                        <tr>
+                            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Statistic
+                            </th>
+                            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Value
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                                Data Sent
+                            </td>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4" id="valNetSent">
+                                {{ context['sysinfo']['net_sent'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                                Data Received
+                            </td>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4" id="valNetRcvd">
+                                {{ context['sysinfo']['net_rcvd'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                                Packets Sent
+                            </td>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4" id="valPckSent">
+                                {{ context['sysinfo']['net_packets_sent'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                                Packets Received
+                            </td>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4" id="valPckRcvd">
+                                {{ context['sysinfo']['net_packets_rcvd'] }}
+                            </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-4">
+            <div class="relative flex flex-col min-w-0 break-words bg-black border-solid border-2 border-green-500 text-green-500 w-full mb-6 shadow-lg rounded ">
+                <div class="rounded-t mb-0 px-4 py-3 border-0">
+                    <div class="flex flex-wrap items-center">
+                        <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+                            <h3 class="font-semibold text-xl"><i class="lni lni-harddrive"></i> STORAGE</h3>
+                        </div>
+                        <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block w-full overflow-x-auto">
+                    <table class="items-center bg-transparent w-full border-collapse ">
+                        <thead>
+                        <tr>
+                            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Storage Pool
+                            </th>
+                            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Avail
+                            </th>
+                            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Total
+                            </th>
+                            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                In use %
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for device in context['storage'] %}
+                        <tr>
+                            <th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left  ">
+                                {{ device['name'] }}
+                            </th>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
+                                {{ device['free'] }}
+                            </td>
+                            <td class="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                {{ device['total'] }}
+                            </td>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                <i class="fas fa-arrow-up text-emerald-500 mr-4"></i>
+                                {{ device['in_use_pct'] }} %
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
